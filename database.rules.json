@@ -1,0 +1,128 @@
+{
+  "rules": {
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "profile": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+    "homepage": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+    "websiteSettings": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+    "contactSettings": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+    "projects": {
+      ".read": true,
+      ".indexOn": ["slug", "published", "featured", "status", "updatedAt"],
+      "$projectId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['name', 'slug', 'published'])"
+      }
+    },
+    "releases": {
+      ".read": true,
+      ".indexOn": ["projectId", "published", "releaseDate", "isLatest"],
+      "$releaseId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['projectId', 'title', 'version', 'published'])"
+      }
+    },
+    "assets": {
+      ".read": true,
+      ".indexOn": ["projectId", "releaseId", "order"],
+      "$assetId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['projectId', 'releaseId', 'name', 'downloadUrl'])"
+      }
+    },
+    "changelog": {
+      ".read": true,
+      ".indexOn": ["projectId", "releaseId", "published", "date"],
+      "$entryId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['projectId', 'category', 'description', 'published'])"
+      }
+    },
+    "documentation": {
+      ".read": true,
+      ".indexOn": ["projectId", "slug", "published", "order"],
+      "$docId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['projectId', 'title', 'slug', 'published'])"
+      }
+    },
+    "projectActivity": {
+      ".read": true,
+      ".indexOn": ["projectId", "timestamp"],
+      "$activityId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['projectId', 'title', 'timestamp'])"
+      }
+    },
+    "journey": {
+      ".read": true,
+      ".indexOn": ["published", "order", "date"],
+      "$milestoneId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['title', 'date', 'published'])"
+      }
+    },
+    "goals": {
+      ".read": true,
+      ".indexOn": ["published", "category", "order"],
+      "$goalId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['title', 'category', 'published'])"
+      }
+    },
+    "updates": {
+      ".read": true,
+      ".indexOn": ["published", "category", "date"],
+      "$updateId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['title', 'content', 'published'])"
+      }
+    },
+    "currentlyWorking": {
+      ".read": true,
+      ".indexOn": ["published", "order"],
+      "$activityId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['title', 'status', 'published'])"
+      }
+    },
+    "achievements": {
+      ".read": true,
+      ".indexOn": ["published", "order", "date"],
+      "$achievementId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['title', 'date', 'published'])"
+      }
+    },
+    "socialLinks": {
+      ".read": true,
+      ".indexOn": ["visible", "order"],
+      "$linkId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['platform', 'url', 'visible'])"
+      }
+    },
+    "contactMessages": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$messageId": {
+        ".write": "(auth != null && root.child('admins').child(auth.uid).val() === true) || (!data.exists() && newData.hasChildren(['name', 'email', 'subject', 'message', 'createdAt']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 120 && newData.child('email').isString() && newData.child('email').val().length <= 180 && newData.child('subject').isString() && newData.child('subject').val().length > 0 && newData.child('subject').val().length <= 200 && newData.child('message').isString() && newData.child('message').val().length >= 5 && newData.child('message').val().length <= 5000)"
+      }
+    }
+  }
+}
